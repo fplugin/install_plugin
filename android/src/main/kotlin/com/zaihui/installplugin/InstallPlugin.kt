@@ -141,8 +141,11 @@ class InstallPlugin(private val registrar: Registrar) : MethodCallHandler {
     }
 
     private fun uninstall(packageName: String?) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        Log.i("uninstall", "============")
         var packageUri = Uri.parse("package:"+packageName)
-        var intent = Intent(Intent.ACTION_DELETE, packageUri)
+        var intent = Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri)
         val activity: Activity =
             registrar.activity() ?: throw NullPointerException("context is null!")
             activity.startActivity(intent)

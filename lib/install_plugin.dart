@@ -19,10 +19,6 @@ class InstallPlugin {
     return await _channel.invokeMethod('uninstall', params);
   }
 
-  static void test() {
-    print('11111111111111');
-  }
-
   /// for iOS: go to app store by the url
   static Future<String> gotoAppStore(String urlString) async {
     Map<String, String> params = {'urlString': urlString};
