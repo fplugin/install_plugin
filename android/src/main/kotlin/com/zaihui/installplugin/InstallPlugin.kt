@@ -64,6 +64,15 @@ class InstallPlugin(private val registrar: Registrar) : MethodCallHandler {
                     result.error(e.javaClass.simpleName, e.message, null)
                 }
             }
+            "uninstall" -> {
+                try {
+                    var packageName = call.argument<String>("packageName")
+                    uninstall(packageName)
+                    result.success("Success")
+                } catch (e: Throwable) {
+                    result.error(e.javaClass.simpleName, e.message, null)
+                }
+            }
             else -> result.notImplemented()
         }
     }
@@ -129,5 +138,13 @@ class InstallPlugin(private val registrar: Registrar) : MethodCallHandler {
         val uri: Uri = FileProvider.getUriForFile(context, "$appId.fileProvider.install", file)
         intent.setDataAndType(uri, "application/vnd.android.package-archive")
         context.startActivity(intent)
+    }
+
+    private fun uninstall(packageName: String?) {
+        var packageUri = Uri.parse("package:"+packageName)
+        var intent = Intent(Intent.ACTION_DELETE, packageUri)
+        val activity: Activity =
+            registrar.activity() ?: throw NullPointerException("context is null!")
+            activity.startActivity(intent)
     }
 }
